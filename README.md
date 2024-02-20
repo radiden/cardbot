@@ -1,6 +1,6 @@
 # cardbot
 
-simple discord bot with a web server for managing a card list for arcade rhythm games games
+simple discord bot with a web server for managing a card list for arcade rhythm games
 
 this program runs a discord bot and a http server on port 3000 exposing cards added by users on discord in a format compatible with a spicy program
 
