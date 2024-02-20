@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE cards SET id = ? WHERE owner_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "912b628c84974d7bfa59f7b1f213f5f0e7d0b3e7573df3654132d0308d109b31"
+}
