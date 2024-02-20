@@ -63,13 +63,12 @@ async fn add_card(
         true => {
             let locale = ctx.locale().unwrap_or("en");
 
-            let user_card =
-                sqlx::query("SELECT (id IS null) as id_is_null FROM cards WHERE owner_id = ?")
-                    .bind(user_id.clone())
-                    .fetch_one(&ctx.data().database)
-                    .await?;
+            let user_card = sqlx::query("SELECT EXISTS(SELECT 1 FROM cards WHERE owner_id = ?)")
+                .bind(user_id.clone())
+                .fetch_one(&ctx.data().database)
+                .await?;
 
-            let exists = !user_card.get::<bool, _>(0);
+            let exists = user_card.get::<bool, _>(0);
 
             if exists {
                 let update = sqlx::query!(
@@ -83,9 +82,10 @@ async fn add_card(
                 match update {
                     Ok(_) => {
                         if locale == "pl" {
-                            ctx.say("Zaktualizowano kartę.").await?;
+                            ctx.say(format!("Zaktualizowano kartę do {card_upper}."))
+                                .await?;
                         } else {
-                            ctx.say("Card updated.").await?;
+                            ctx.say(format!("Card updated to {card_upper}.")).await?;
                         }
                         return Ok(());
                     }
@@ -114,9 +114,11 @@ async fn add_card(
             }
 
             if locale == "pl" {
-                ctx.say("Dodano karte {card} do bazy.").await?;
+                ctx.say(format!("Dodano karte {card_upper} do bazy."))
+                    .await?;
             } else {
-                ctx.say("Added {card} to the database.").await?;
+                ctx.say(format!("Added card {card_upper} to the database."))
+                    .await?;
             }
         }
         false => {
